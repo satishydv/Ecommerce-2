@@ -1,0 +1,312 @@
+{
+  "types": [
+    {
+      "name": "category",
+      "title": "Category",
+      "type": "document",
+      "fields": [
+        {
+          "name": "title",
+          "title": "Title",
+          "type": "string"
+        },
+        {
+          "name": "slug",
+          "title": "Slug",
+          "type": "slug",
+          "options": {
+            "source": "title"
+          }
+        },
+        {
+          "name": "description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "name": "image",
+          "title": "Image",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "product",
+      "title": "Product",
+      "type": "document",
+      "fields": [
+        {
+          "name": "title",
+          "title": "Title",
+          "type": "string"
+        },
+        {
+          "name": "slug",
+          "title": "Slug",
+          "type": "slug",
+          "options": {
+            "source": "title"
+          }
+        },
+        {
+          "name": "description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "name": "price",
+          "title": "Price",
+          "type": "number"
+        },
+        {
+          "name": "images",
+          "title": "Images",
+          "type": "array",
+          "of": [
+            {
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "name": "category",
+          "title": "Category",
+          "type": "reference",
+          "to": [
+            {
+              "type": "category"
+            }
+          ]
+        },
+        {
+          "name": "brand",
+          "title": "Brand",
+          "type": "reference",
+          "to": [
+            {
+              "type": "brand"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "brand",
+      "title": "Brand",
+      "type": "document",
+      "fields": [
+        {
+          "name": "name",
+          "title": "Name",
+          "type": "string"
+        },
+        {
+          "name": "slug",
+          "title": "Slug",
+          "type": "slug",
+          "options": {
+            "source": "name"
+          }
+        },
+        {
+          "name": "logo",
+          "title": "Logo",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "blog",
+      "title": "Blog",
+      "type": "document",
+      "fields": [
+        {
+          "name": "title",
+          "title": "Title",
+          "type": "string"
+        },
+        {
+          "name": "slug",
+          "title": "Slug",
+          "type": "slug",
+          "options": {
+            "source": "title"
+          }
+        },
+        {
+          "name": "content",
+          "title": "Content",
+          "type": "blockContent"
+        },
+        {
+          "name": "author",
+          "title": "Author",
+          "type": "reference",
+          "to": [
+            {
+              "type": "author"
+            }
+          ]
+        },
+        {
+          "name": "category",
+          "title": "Category",
+          "type": "reference",
+          "to": [
+            {
+              "type": "blogCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "author",
+      "title": "Author",
+      "type": "document",
+      "fields": [
+        {
+          "name": "name",
+          "title": "Name",
+          "type": "string"
+        },
+        {
+          "name": "image",
+          "title": "Image",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "blogCategory",
+      "title": "Blog Category",
+      "type": "document",
+      "fields": [
+        {
+          "name": "title",
+          "title": "Title",
+          "type": "string"
+        },
+        {
+          "name": "slug",
+          "title": "Slug",
+          "type": "slug",
+          "options": {
+            "source": "title"
+          }
+        }
+      ]
+    },
+    {
+      "name": "order",
+      "title": "Order",
+      "type": "document",
+      "fields": [
+        {
+          "name": "orderId",
+          "title": "Order ID",
+          "type": "string"
+        },
+        {
+          "name": "customer",
+          "title": "Customer",
+          "type": "object",
+          "fields": [
+            {
+              "name": "name",
+              "title": "Name",
+              "type": "string"
+            },
+            {
+              "name": "email",
+              "title": "Email",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "items",
+          "title": "Items",
+          "type": "array",
+          "of": [
+            {
+              "type": "object",
+              "fields": [
+                {
+                  "name": "product",
+                  "title": "Product",
+                  "type": "reference",
+                  "to": [
+                    {
+                      "type": "product"
+                    }
+                  ]
+                },
+                {
+                  "name": "quantity",
+                  "title": "Quantity",
+                  "type": "number"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "total",
+          "title": "Total",
+          "type": "number"
+        },
+        {
+          "name": "status",
+          "title": "Status",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "address",
+      "title": "Address",
+      "type": "object",
+      "fields": [
+        {
+          "name": "street",
+          "title": "Street",
+          "type": "string"
+        },
+        {
+          "name": "city",
+          "title": "City",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "title": "State",
+          "type": "string"
+        },
+        {
+          "name": "zipCode",
+          "title": "ZIP Code",
+          "type": "string"
+        },
+        {
+          "name": "country",
+          "title": "Country",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "blockContent",
+      "title": "Block Content",
+      "type": "array",
+      "of": [
+        {
+          "type": "block"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
