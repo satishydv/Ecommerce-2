@@ -8,41 +8,64 @@ import { AnimatePresence, motion } from "motion/react";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
+
 interface Props {
   categories: Category[];
   slug: string;
+  initialProducts?: Product[];
 }
 
-const CategoryProducts = ({ categories, slug }: Props) => {
+const CategoryProducts = ({ categories, slug, initialProducts = [] }: Props) => {
   const [currentSlug, setCurrentSlug] = useState(slug);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  // Debug logging
+  useEffect(() => {
+    console.log("CategoryProducts mounted with:", {
+      slug,
+      initialProductsCount: initialProducts.length,
+      currentSlug,
+      productsCount: products.length
+    });
+  }, [slug, initialProducts.length, currentSlug, products.length]);
+
   const handleCategoryChange = (newSlug: string) => {
     if (newSlug === currentSlug) return; // Prevent unnecessary updates
     setCurrentSlug(newSlug);
+    setError(null); // Clear any previous errors
     router.push(`/category/${newSlug}`, { scroll: false }); // Update URL without
   };
 
   const fetchProducts = async (categorySlug: string) => {
     setLoading(true);
+    setError(null);
     try {
+      console.log("Fetching products for category:", categorySlug);
       const query = `
         *[_type == 'product' && references(*[_type == "category" && slug.current == $categorySlug]._id)] | order(name asc){
         ...,"categories": categories[]->title}
       `;
       const data = await client.fetch(query, { categorySlug });
+      console.log("Fetched products:", data);
       setProducts(data);
     } catch (error) {
       console.error("Error fetching products:", error);
+      setError("Failed to load products. Please try again.");
       setProducts([]);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    fetchProducts(currentSlug);
-  }, [currentSlug]);
+    // Only fetch if the slug changes and it's different from the initial slug
+    if (currentSlug !== slug) {
+      fetchProducts(currentSlug);
+    }
+  }, [currentSlug, slug]);
 
   return (
     <div className="py-5 flex flex-col md:flex-row items-start gap-5">
@@ -63,6 +86,13 @@ const CategoryProducts = ({ categories, slug }: Props) => {
             <div className="flex items-center space-x-2 text-blue-600">
               <Loader2 className="w-5 h-5 animate-spin" />
               <span>Product is loading...</span>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-10 min-h-80 space-y-4 text-center bg-red-50 rounded-lg w-full">
+            <div className="text-red-600">
+              <p className="font-semibold">Error</p>
+              <p>{error}</p>
             </div>
           </div>
         ) : products?.length > 0 ? (

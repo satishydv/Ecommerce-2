@@ -6,7 +6,8 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
+  useCdn: process.env.NODE_ENV === 'production', // Use CDN in production for better performance
+  perspective: 'published', // Only fetch published content
 })
 
 // Client for write operations (creating, updating, deleting documents)
