@@ -22,17 +22,7 @@ export const orderType = defineType({
         { name: "hosted_invoice_url", type: "url" },
       ],
     },
-    defineField({
-      name: "stripeCheckoutSessionId",
-      title: "Stripe Checkout Session ID",
-      type: "string",
-    }),
-    defineField({
-      name: "stripeCustomerId",
-      title: "Stripe Customer ID",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
+
     defineField({
       name: "clerkUserId",
       title: "Store User ID",
@@ -51,12 +41,7 @@ export const orderType = defineType({
       type: "string",
       validation: (Rule) => Rule.required().email(),
     }),
-    defineField({
-      name: "stripePaymentIntentId",
-      title: "Stripe Payment Intent ID",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
+
     defineField({
       name: "products",
       title: "Products",
