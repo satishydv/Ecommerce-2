@@ -1,4 +1,4 @@
-import { MY_ORDERS_QUERYResult } from "@/sanity.types";
+import { Order } from "@/sanity.types";
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
@@ -16,7 +16,7 @@ import { urlFor } from "@/sanity/lib/image";
 import PriceFormatter from "./PriceFormatter";
 
 interface OrderDetailsDialogProps {
-  order: MY_ORDERS_QUERYResult[number] | null;
+  order: Order | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -72,7 +72,7 @@ const OrderDetailDialog: React.FC<OrderDetailsDialogProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {order.products?.map((product, index) => (
+            {order.products?.map((product: any, index: number) => (
               <TableRow key={index}>
                 <TableCell className="flex items-center gap-2">
                   {product?.product?.images && (

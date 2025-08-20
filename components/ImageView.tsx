@@ -1,6 +1,5 @@
 "use client";
 import {
-  internalGroqTypeReferenceTo,
   SanityImageCrop,
   SanityImageHotspot,
 } from "@/sanity.types";
@@ -15,7 +14,6 @@ interface Props {
       _ref: string;
       _type: "reference";
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
