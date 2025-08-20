@@ -1,145 +1,122 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { Product } from "./sanity.types";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity?: number;
+export interface CartItem {
+  product: Product;
+  quantity: number;
 }
 
-interface Store {
-  // Cart state
-  cart: Product[];
-  addToCart: (product: Product) => void;
-  addItem: (product: Product) => void; // Alias for addToCart
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
-  
-  // Wishlist state (using the expected names from components)
+interface StoreState {
+  items: CartItem[];
+  addItem: (product: Product) => void;
+  removeItem: (productId: string) => void;
+  deleteCartProduct: (productId: string) => void;
+  resetCart: () => void;
+  getTotalPrice: () => number;
+  getSubTotalPrice: () => number;
+  getItemCount: (productId: string) => number;
+  getGroupedItems: () => CartItem[];
+  //   // favorite
   favoriteProduct: Product[];
   addToFavorite: (product: Product) => Promise<void>;
   removeFromFavorite: (productId: string) => void;
   resetFavorite: () => void;
-  
-  // Cart total
-  getCartTotal: () => number;
-  getCartCount: () => number;
-  getItemCount: (productId: string) => number; // Get count of specific item
 }
 
-const useStore = create<Store>()(
+const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
-      cart: [],
+      items: [],
       favoriteProduct: [],
-      
-      addToCart: (product) => {
+      addItem: (product) =>
         set((state) => {
-          const existingProduct = state.cart.find(item => item.id === product.id);
-          if (existingProduct) {
+          const existingItem = state.items.find(
+            (item) => item.product._id === product._id
+          );
+          if (existingItem) {
             return {
-              cart: state.cart.map(item =>
-                item.id === product.id
-                  ? { ...item, quantity: (item.quantity || 1) + 1 }
+              items: state.items.map((item) =>
+                item.product._id === product._id
+                  ? { ...item, quantity: item.quantity + 1 }
                   : item
-              )
+              ),
             };
+          } else {
+            return { items: [...state.items, { product, quantity: 1 }] };
           }
-          return {
-            cart: [...state.cart, { ...product, quantity: 1 }]
-          };
-        });
-      },
-      
-      addItem: (product) => {
-        // Alias for addToCart
-        const state = get();
-        state.addToCart(product);
-      },
-      
-      removeFromCart: (productId) => {
+        }),
+      removeItem: (productId) =>
         set((state) => ({
-          cart: state.cart.filter(item => item.id !== productId)
-        }));
-      },
-      
-      updateQuantity: (productId, quantity) => {
-        set((state) => ({
-          cart: state.cart.map(item =>
-            item.id === productId
-              ? { ...item, quantity: Math.max(1, quantity) }
-              : item
-          )
-        }));
-      },
-      
-      clearCart: () => {
-        set({ cart: [] });
-      },
-      
-      addToFavorite: (product) => {
-        return new Promise<void>((resolve) => {
-          set((state) => {
-            const existingProduct = state.favoriteProduct.find(item => item.id === product.id);
-            if (existingProduct) {
-              // Remove from favorites if already exists
-              const newState = {
-                favoriteProduct: state.favoriteProduct.filter(item => item.id !== product.id)
-              };
-              resolve();
-              return newState;
+          items: state.items.reduce((acc, item) => {
+            if (item.product._id === productId) {
+              if (item.quantity > 1) {
+                acc.push({ ...item, quantity: item.quantity - 1 });
+              }
+            } else {
+              acc.push(item);
             }
-            // Add to favorites
-            const newState = {
-              favoriteProduct: [...state.favoriteProduct, product]
+            return acc;
+          }, [] as CartItem[]),
+        })),
+      deleteCartProduct: (productId) =>
+        set((state) => ({
+          items: state.items.filter(
+            ({ product }) => product?._id !== productId
+          ),
+        })),
+      resetCart: () => set({ items: [] }),
+      getTotalPrice: () => {
+        return get().items.reduce(
+          (total, item) => total + (item.product.price ?? 0) * item.quantity,
+          0
+        );
+      },
+      getSubTotalPrice: () => {
+        return get().items.reduce((total, item) => {
+          const price = item.product.price ?? 0;
+          const discount = ((item.product.discount ?? 0) * price) / 100;
+          const discountedPrice = price + discount;
+          return total + discountedPrice * item.quantity;
+        }, 0);
+      },
+      getItemCount: (productId) => {
+        const item = get().items.find((item) => item.product._id === productId);
+        return item ? item.quantity : 0;
+      },
+      getGroupedItems: () => get().items,
+      addToFavorite: (product: Product) => {
+        return new Promise<void>((resolve) => {
+          set((state: StoreState) => {
+            const isFavorite = state.favoriteProduct.some(
+              (item) => item._id === product._id
+            );
+            return {
+              favoriteProduct: isFavorite
+                ? state.favoriteProduct.filter(
+                    (item) => item._id !== product._id
+                  )
+                : [...state.favoriteProduct, { ...product }],
             };
-            resolve();
-            return newState;
           });
+          resolve();
         });
       },
-      
-      removeFromFavorite: (productId) => {
-        set((state) => ({
-          favoriteProduct: state.favoriteProduct.filter(item => item.id !== productId)
+      removeFromFavorite: (productId: string) => {
+        set((state: StoreState) => ({
+          favoriteProduct: state.favoriteProduct.filter(
+            (item) => item?._id !== productId
+          ),
         }));
       },
-      
       resetFavorite: () => {
         set({ favoriteProduct: [] });
       },
-      
-      getCartTotal: () => {
-        const state = get();
-        return state.cart.reduce((total, item) => {
-          return total + (item.price * (item.quantity || 1));
-        }, 0);
-      },
-      
-      getCartCount: () => {
-        const state = get();
-        return state.cart.reduce((count, item) => {
-          return count + (item.quantity || 1);
-        }, 0);
-      },
-      
-      getItemCount: (productId: string) => {
-        const state = get();
-        const item = state.cart.find(item => item.id === productId);
-        return item ? (item.quantity || 1) : 0;
-      },
     }),
     {
-      name: 'shopzone-store',
-      partialize: (state) => ({
-        cart: state.cart,
-        favoriteProduct: state.favoriteProduct,
-      }),
+      name: "cart-store",
     }
   )
 );
 
-export default useStore; 
+export default useStore;
