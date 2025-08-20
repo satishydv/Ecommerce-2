@@ -1,3 +1,5 @@
-query------>sanity query
-index------>functions
-6:29:57
+# ShopZone
+
+E-commerce platform built with Next.js and Sanity CMS.
+
+<!-- Updated for Vercel deployment -->
