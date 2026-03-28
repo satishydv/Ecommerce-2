@@ -5,8 +5,8 @@ import Footer from "@/components/Footer";
 import {ClerkProvider} from '@clerk/nextjs'
 
 export const metadata: Metadata = {
-  title: "Shopzone",
-  description: "Shopzon is a platform for buying and selling products",
+  title: "Rudh Shopzone",
+  description: "Rudh Shopzone is a platform for buying and selling products",
 };
 
 export default function RootLayout({
