@@ -16,6 +16,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { orderData } = body;
 
+    if (!orderData) {
+      return NextResponse.json(
+        { error: "Order data is required" },
+        { status: 400 }
+      );
+    }
+
     // Create the order document
     const orderDoc = {
       _type: 'order',
@@ -33,10 +40,18 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
 
-  } catch (error) {
-    console.error("Error creating order:", error);
+  } catch (error: any) {
+    console.error("CRITICAL: Error creating order in Sanity:", {
+      message: error.message,
+      stack: error.stack,
+      details: error?.response?.body || error,
+    });
+    
     return NextResponse.json(
-      { error: "Failed to create order" },
+      { 
+        error: "Failed to create order", 
+        message: error.message || "Unknown error" 
+      },
       { status: 500 }
     );
   }

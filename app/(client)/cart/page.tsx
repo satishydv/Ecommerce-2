@@ -85,32 +85,60 @@ const CartPage = () => {
     setLoading(true);
     try {
       const orderNumber = crypto.randomUUID();
-      const totalAmount = getTotalPrice();
-      
-      // Simulate order creation (since we don't have write permissions)
-      // In a real application, you would save this to your database
-      console.log('Order created:', {
+      const totalPrice = getTotalPrice();
+      const subTotalPrice = getSubTotalPrice();
+      const amountDiscount = subTotalPrice - totalPrice;
+
+      const orderData = {
         orderNumber,
         customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        products: groupedItems,
-        totalAmount,
-        shippingAddress: selectedAddress,
-        status: 'pending'
+        email: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+        products: groupedItems.map((item) => ({
+          product: {
+            _type: "reference",
+            _ref: item.product._id,
+          },
+          quantity: item.quantity,
+          _key: crypto.randomUUID(), // Sanity arrays need keys
+        })),
+        totalPrice,
+        currency: "INR",
+        amountDiscount,
+        address: {
+          name: selectedAddress.name,
+          address: selectedAddress.address,
+          city: selectedAddress.city,
+          state: selectedAddress.state,
+          zip: selectedAddress.zip,
+        },
+        status: "pending",
+        orderDate: new Date().toISOString(),
+      };
+
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderData }),
       });
-      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to place order");
+      }
+
       // Show success message
       toast.success("Order placed successfully!");
-      
+
       // Reset cart
       resetCart();
-      
+
       // Redirect to success page
       router.push(`/success?orderNumber=${orderNumber}`);
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating order:", error);
-      toast.error("Failed to create order. Please try again.");
+      toast.error(error.message || "Failed to create order. Please try again.");
     } finally {
       setLoading(false);
     }

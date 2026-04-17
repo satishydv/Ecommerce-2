@@ -16,5 +16,5 @@ export const writeClient = createClient({
   dataset,
   apiVersion,
   useCdn: false,
-  token: process.env.SANITY_API_TOKEN, // This token needs to be configured in your Sanity project
+  token: process.env.SANITY_API_TOKEN || process.env.SANITY_API_READ_TOKEN, // Checks for both possible token names
 })

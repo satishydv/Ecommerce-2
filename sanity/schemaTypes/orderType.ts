@@ -144,9 +144,10 @@ export const orderType = defineType({
     },
     prepare(select) {
       const orderIdSnippet = `${select.orderId.slice(0, 5)}...${select.orderId.slice(-5)}`;
+      const EXCHANGE_RATE = 83;
       return {
         title: `${select.name} (${orderIdSnippet})`,
-        subtitle: `${select.amount} ${select.currency}, ${select.email}`,
+        subtitle: `₹${(select.amount * EXCHANGE_RATE).toLocaleString("en-IN")} ${select.currency}, ${select.email}`,
         media: BasketIcon,
       };
     },

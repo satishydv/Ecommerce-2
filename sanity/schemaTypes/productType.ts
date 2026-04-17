@@ -107,9 +107,10 @@ export const productType = defineType({
     prepare(selection) {
       const { title, subtitle, media } = selection;
       const image = media && media[0];
+      const EXCHANGE_RATE = 83; // Directly using the value to avoid potential import issues in Sanity Studio
       return {
         title: title,
-        subtitle: `$${subtitle}`,
+        subtitle: `₹${(subtitle * EXCHANGE_RATE).toLocaleString("en-IN")}`,
         media: image,
       };
     },

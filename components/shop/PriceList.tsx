@@ -2,13 +2,14 @@ import React from "react";
 import Title from "../Title";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
+import { EXCHANGE_RATE } from "@/constants/currency";
 
 const priceArray = [
-  { title: "Under $100", value: "0-100" },
-  { title: "$100 - $200", value: "100-200" },
-  { title: "$200 - $300", value: "200-300" },
-  { title: "$300 - $500", value: "300-500" },
-  { title: "Over $500", value: "500-10000" },
+  { title: `Under ₹${100 * EXCHANGE_RATE}`, value: "0-100" },
+  { title: `₹${100 * EXCHANGE_RATE} - ₹${200 * EXCHANGE_RATE}`, value: "100-200" },
+  { title: `₹${200 * EXCHANGE_RATE} - ₹${300 * EXCHANGE_RATE}`, value: "200-300" },
+  { title: `₹${300 * EXCHANGE_RATE} - ₹${500 * EXCHANGE_RATE}`, value: "300-500" },
+  { title: `Over ₹${500 * EXCHANGE_RATE}`, value: "500-10000" },
 ];
 
 interface Props {
