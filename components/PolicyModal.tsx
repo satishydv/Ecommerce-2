@@ -24,14 +24,14 @@ const PolicyModal: React.FC<PolicyModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
-        <DialogHeader className="border-b pb-4">
-          <DialogTitle className="text-2xl font-bold text-shop_dark_green">
+      <DialogContent className="w-[95vw] md:w-full max-w-2xl max-h-[85vh] flex flex-col p-4 md:p-6">
+        <DialogHeader className="border-b pb-2 md:pb-4">
+          <DialogTitle className="text-xl md:text-2xl font-bold text-shop_dark_green">
             {title}
           </DialogTitle>
         </DialogHeader>
-        <ScrollArea className="flex-1 mt-4 pr-4">
-          <div className="text-darkColor/80 space-y-4 leading-relaxed">
+        <ScrollArea className="flex-1 mt-2 md:mt-4 pr-2 md:pr-4">
+          <div className="text-darkColor/80 space-y-4 leading-relaxed text-sm md:text-base">
             {children}
           </div>
         </ScrollArea>
