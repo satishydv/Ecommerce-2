@@ -14,14 +14,49 @@ import PolicyModal from "./PolicyModal";
 const Footer = () => {
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isFAQsModalOpen, setIsFAQsModalOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const handleLinkClick = (e: React.MouseEvent, title: string) => {
-    if (title === "Shipping Policy") {
-      e.preventDefault();
-      setIsShippingModalOpen(true);
-    } else if (title === "Return and Refund Policy") {
-      e.preventDefault();
-      setIsReturnModalOpen(true);
+    switch (title) {
+      case "Shipping Policy":
+        e.preventDefault();
+        setIsShippingModalOpen(true);
+        break;
+      case "Return and Refund Policy":
+        e.preventDefault();
+        setIsReturnModalOpen(true);
+        break;
+      case "About us":
+        e.preventDefault();
+        setIsAboutModalOpen(true);
+        break;
+      case "Contact us":
+        e.preventDefault();
+        setIsContactModalOpen(true);
+        break;
+      case "Terms & Conditions":
+        e.preventDefault();
+        setIsTermsModalOpen(true);
+        break;
+      case "Privacy Policy":
+        e.preventDefault();
+        setIsPrivacyModalOpen(true);
+        break;
+      case "FAQs":
+        e.preventDefault();
+        setIsFAQsModalOpen(true);
+        break;
+      case "Help":
+        e.preventDefault();
+        setIsHelpModalOpen(true);
+        break;
+      default:
+        break;
     }
   };
 
@@ -164,6 +199,103 @@ const Footer = () => {
               You will be responsible for paying for your own shipping costs for
               returning your item unless the item is damaged or defective.
             </p>
+          </section>
+        </div>
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
+        title="About us"
+      >
+        <div className="space-y-4">
+          <p>
+            Welcome to <strong>Rudh Shopzone</strong>! We are dedicated to providing the best shopping experience for our customers.
+          </p>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Our Mission</h4>
+            <p>Our mission is to bring you curated, high-quality furniture that elevates your living spaces.</p>
+          </section>
+        </div>
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        title="Contact us"
+      >
+        <div className="space-y-4">
+          <p>We would love to hear from you!</p>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Email</h4>
+            <p>support@rudhshopzone.com</p>
+          </section>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Phone</h4>
+            <p>+1 (800) 123-4567</p>
+          </section>
+        </div>
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+        title="Terms & Conditions"
+      >
+        <div className="space-y-4">
+          <p>
+            Please read these terms and conditions carefully before using our website.
+          </p>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Usage</h4>
+            <p>By using this site, you agree to comply with and be bound by the following terms of use.</p>
+          </section>
+        </div>
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+        title="Privacy Policy"
+      >
+        <div className="space-y-4">
+          <p>
+            Your privacy is important to us.
+          </p>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Data Collection</h4>
+            <p>We only collect personal information that you provide to us to process your orders and improve our services.</p>
+          </section>
+        </div>
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={isFAQsModalOpen}
+        onClose={() => setIsFAQsModalOpen(false)}
+        title="FAQs"
+      >
+        <div className="space-y-4">
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">How do I track my order?</h4>
+            <p>You can track your order using the tracking link sent to your email after purchase.</p>
+          </section>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Do you ship internationally?</h4>
+            <p>Currently, we only ship nationwide, but we plan to expand in the future.</p>
+          </section>
+        </div>
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={isHelpModalOpen}
+        onClose={() => setIsHelpModalOpen(false)}
+        title="Help"
+      >
+        <div className="space-y-4">
+          <p>Need some assistance?</p>
+          <section>
+            <h4 className="font-bold text-darkColor mb-1">Customer Support</h4>
+            <p>Our support team is available 24/7. Reach out via the Contact Us page or email us directly.</p>
           </section>
         </div>
       </PolicyModal>
